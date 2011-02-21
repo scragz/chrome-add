@@ -1,0 +1,14 @@
+{
+  "name": "Attention Deficit Delay",
+  "version": "0.1",
+  "description": "Adds a configurable delay to sites you compulsively check. Pair with StayFocused for ultimate (facebook|reddit|youtube|goatse) control.",
+  "background_page": "background.html",
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["script.js"],
+      "run_at": "document_start"
+    }
+  ]
+}

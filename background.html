@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Attention Defecit Delay Background</title></head>
+<script type="text/javascript">
+var defaults = {sites: '(www\.)?facebook\.com', delay: 30};
+
+function options() {
+    return {sites: localStorage['sites'] || defaults.sites, delay: localStorage['delay'] || defaults.delay};
+}
+
+chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+    console.log(request);
+    switch (request.method) {
+    case 'getOptions':
+        console.log(request.method+' returning: ');
+        console.log(options());
+        sendResponse(options());
+        break;
+    case 'setOptions':
+        console.log(request.method+' called with: ');
+        console.log(request.options);
+        localStorage['sites'] = request.options.sites;
+        localStorage['delay'] = request.options.delay;
+        sendResponse(options());
+        break;
+    default:
+        sendResponse({});
+    }
+});
+</script>
+</html>

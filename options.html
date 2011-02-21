@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Attention Defecit Delay Options</title></head>
+<script type="text/javascript">
+function save_options() {
+    var options_sites = document.getElementById("options_sites");
+    var options_delay = document.getElementById("options_delay");
+    chrome.extension.sendRequest({method: 'setOptions', options: {sites: options_sites.value, delay:options_delay.value}}, function() {
+        var status = document.getElementById("status");
+        status.innerHTML = "Options Saved.";
+        setTimeout(function() {
+            status.innerHTML = "";
+        }, 750);
+    });
+}
+
+function restore_options() {
+    chrome.extension.sendRequest({method: 'getOptions'}, function(options) {
+        var options_sites = document.getElementById("options_sites");
+        var options_delay = document.getElementById("options_delay");
+        if (options.sites && options_sites) options_sites.value = options.sites;
+        if (options.delay && options_delay) options_delay.value = options.delay;
+    });
+}
+</script>
+<style type="text/css">
+label {font-weight: bold;}
+</style>
+
+<body onload="restore_options()">
+
+<div><label for="options_delay">Delay</label>
+<input type="text" id="options_delay" /></div>
+<p>In seconds</p>
+
+<div><label for="options_sites">Sites</label><br />
+<textarea id="options_sites"></textarea></div>
+<p>Regular expressions, one per line</p>
+
+<br />
+<button onclick="save_options()">Save</button>
+</body>
+</html>
