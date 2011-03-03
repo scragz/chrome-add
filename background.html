@@ -3,10 +3,14 @@
 <head>
 <title>Attention Defecit Delay Background</title></head>
 <script type="text/javascript">
-var defaults = {sites: '(www\.)?facebook\.com', delay: 30};
+var defaults = {sites: '(www\.)?facebook\.com', delay: 30, strict: false};
 
 function options() {
-    return {sites: localStorage['sites'] || defaults.sites, delay: localStorage['delay'] || defaults.delay};
+    return {
+		sites: localStorage['sites'] || defaults.sites,
+		delay: localStorage['delay'] || defaults.delay,
+		strict: (localStorage['strict'] == 'true') || defaults.strict
+	};
 }
 
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
@@ -22,8 +26,18 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
         console.log(request.options);
         localStorage['sites'] = request.options.sites;
         localStorage['delay'] = request.options.delay;
+        localStorage['strict'] = request.options.strict;
         sendResponse(options());
         break;
+	case 'closeSelectedTab':
+		console.log('closeSelectedTab');
+		chrome.windows.getCurrent(function(cw){
+			chrome.tabs.getSelected(cw.id, function(ct){
+				chrome.tabs.remove(ct.id);
+			});
+		});
+	    sendResponse({});
+		break;
     default:
         sendResponse({});
     }

@@ -4,9 +4,10 @@
 <title>Attention Defecit Delay Options</title></head>
 <script type="text/javascript">
 function save_options() {
-    var options_sites = document.getElementById("options_sites");
-    var options_delay = document.getElementById("options_delay");
-    chrome.extension.sendRequest({method: 'setOptions', options: {sites: options_sites.value, delay:options_delay.value}}, function() {
+    var options_sites  = document.getElementById("options_sites");
+    var options_delay  = document.getElementById("options_delay");
+    var options_strict_bool = document.getElementById("options_strict") && document.getElementById("options_strict").checked;
+    chrome.extension.sendRequest({method: 'setOptions', options: {sites: options_sites.value, delay:options_delay.value, strict:options_strict_bool}}, function() {
         var status = document.getElementById("status");
         status.innerHTML = "Options Saved.";
         setTimeout(function() {
@@ -19,8 +20,10 @@ function restore_options() {
     chrome.extension.sendRequest({method: 'getOptions'}, function(options) {
         var options_sites = document.getElementById("options_sites");
         var options_delay = document.getElementById("options_delay");
+        var options_strict = document.getElementById("options_strict");
         if (options.sites && options_sites) options_sites.value = options.sites;
         if (options.delay && options_delay) options_delay.value = options.delay;
+        if (options.strict && options_strict) options_strict.checked = true;
     });
 }
 </script>
@@ -34,8 +37,12 @@ label {font-weight: bold;}
 <input type="text" id="options_delay" /></div>
 <p>In seconds</p>
 
+<div><label for="options_strict">Strict</label>
+<input type="checkbox" id="options_strict" /></div>
+<p>Only countdown while tab is focused</p>
+
 <div><label for="options_sites">Sites</label><br />
-<textarea id="options_sites"></textarea></div>
+<textarea id="options_sites" rows="10" cols="50"></textarea></div>
 <p>Regular expressions, one per line</p>
 
 <br />
